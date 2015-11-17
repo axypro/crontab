@@ -18,8 +18,8 @@ class SetterTest extends \PHPUnit_Framework_TestCase
      */
     public function testGet()
     {
-        $setter = new Setter(__DIR__.'/emul/crontab.php');
-        $fn = __DIR__.'/emul/tmp/user.txt';
+        $setter = new Setter(__DIR__.'/emu/crontab.php');
+        $fn = __DIR__.'/emu/tmp/user.txt';
         file_put_contents($fn, "1\n2\n");
         $this->assertSame("1\n2\n", $setter->get('user'));
         unlink($fn);
@@ -31,8 +31,8 @@ class SetterTest extends \PHPUnit_Framework_TestCase
      */
     public function testSet()
     {
-        $setter = new Setter(__DIR__.'/emul/crontab.php');
-        $fn = __DIR__.'/emul/tmp/root.txt';
+        $setter = new Setter(__DIR__.'/emu/crontab.php');
+        $fn = __DIR__.'/emu/tmp/root.txt';
         if (is_file($fn)) {
             unlink($fn);
         }
