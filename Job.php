@@ -11,8 +11,6 @@ use axy\crontab\errors\InvalidJobString;
 
 /**
  * A cron job
- *
- * @todo sunday is 7
  */
 class Job
 {
@@ -90,11 +88,13 @@ class Job
                 return false;
             }
         }
+        $wDay = 'w'.'day';
+        $mDay = 'm'.'day';
         if ($this->dayOfWeek !== null) {
-            if (Checker::check($this->dayOfWeek, $date['wday'], 'w')) {
+            if (Checker::check($this->dayOfWeek, $date[$wDay], 'w')) {
                 return true;
             }
-            if ((int)$date['wday'] === 0) {
+            if ((int)$date[$wDay] === 0) {
                 if (Checker::check($this->dayOfWeek, 7, 'w')) { // Sunday is 0 and 7
                     return true;
                 }
@@ -103,7 +103,7 @@ class Job
                 return false;
             }
         }
-        return Checker::check($this->dayOfMonth, $date['mday']);
+        return Checker::check($this->dayOfMonth, $date[$mDay]);
     }
 
     /**
