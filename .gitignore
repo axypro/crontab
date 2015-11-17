@@ -3,3 +3,5 @@ vendor
 .idea
 phpunit.xml
 phpmd.xml
+tests/emul/tmp/*
+!tests/emul/tmp/.gitkeep
