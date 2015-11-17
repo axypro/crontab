@@ -94,6 +94,11 @@ class Job
             if (Checker::check($this->dayOfWeek, $date['wday'], 'w')) {
                 return true;
             }
+            if ((int)$date['wday'] === 0) {
+                if (Checker::check($this->dayOfWeek, 7, 'w')) { // Sunday is 0 and 7
+                    return true;
+                }
+            }
             if ($this->dayOfMonth === null) {
                 return false;
             }
