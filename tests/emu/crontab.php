@@ -38,7 +38,7 @@ if ($opt === '-l') {
         fwrite(STDOUT, file_get_contents($fn));
         exit();
     } else {
-        // fwrite(STDERR, 'no crontab for '.$user.PHP_EOL);
+        fwrite(STDERR, 'no crontab for '.$user.PHP_EOL);
         exit();
     }
 } elseif ($opt === '-e') {

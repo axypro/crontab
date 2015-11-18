@@ -28,28 +28,21 @@ class Setter
      */
     public function get($user = null)
     {
-        $result = [];
         $cUser = $user ? ' -u'.$user : '';
         $cmd = $this->cmd.$cUser.' -l';
-        $fp = popen($cmd, 'r');
-        while (!feof($fp)) {
-            $result[] = fread($fp, 512);
-        }
-        fclose($fp);
-        return implode('', $result);
+        return $this->loadFromProcess($cmd);
     }
 
     /**
      * @param string $content
      * @param string $user [optional]
+     * @return bool
      */
     public function set($content, $user = null)
     {
         $cUser = $user ? ' -u'.$user : '';
         $cmd = $this->cmd.$cUser.' -e';
-        $fp = popen($cmd, 'w');
-        fwrite($fp, $content);
-        fclose($fp);
+        return $this->saveToProcess($cmd, $content);
     }
 
     /**
@@ -64,6 +57,43 @@ class Setter
     }
 
     /**
+     * @param string $cmd
+     * @return string
+     */
+    private function loadFromProcess($cmd)
+    {
+        $fp = proc_open($cmd, $this->descriptors, $pipes);
+        if (!$fp) {
+            return '';
+        }
+        $result = stream_get_contents($pipes[1]);
+        foreach ($pipes as $pipe) {
+            fclose($pipe);
+        }
+        proc_close($fp);
+        return $result;
+    }
+
+    /**
+     * @param string $cmd
+     * @param string $content
+     * @return string
+     */
+    private function saveToProcess($cmd, $content)
+    {
+        $fp = proc_open($cmd, $this->descriptors, $pipes);
+        if (!$fp) {
+            return false;
+        }
+        fwrite($pipes[0], $content);
+        foreach ($pipes as $pipe) {
+            fclose($pipe);
+        }
+        proc_close($fp);
+        return true;
+    }
+
+    /**
      * @var string
      */
     private $cmd;
@@ -72,4 +102,13 @@ class Setter
      * @var \axy\crontab\Setter
      */
     private static $system;
+
+    /**
+     * @var array
+     */
+    private $descriptors = [
+        0 => ['pipe', 'r'],
+        1 => ['pipe', 'w'],
+        2 => ['file', '/dev/null', 'w'],
+    ];
 }
