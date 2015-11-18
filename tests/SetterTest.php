@@ -36,7 +36,7 @@ class SetterTest extends \PHPUnit_Framework_TestCase
         if (is_file($fn)) {
             unlink($fn);
         }
-        $setter->set('root', "3\n4\n");
+        $setter->set("3\n4\n", 'root');
         $this->assertFileExists($fn);
         $this->assertSame(file_get_contents($fn), "3\n4\n");
         unlink($fn);
@@ -50,5 +50,22 @@ class SetterTest extends \PHPUnit_Framework_TestCase
         $instance = Setter::getSystemInstance();
         $this->assertInstanceOf('axy\crontab\Setter', $instance);
         $this->assertSame($instance, Setter::getSystemInstance());
+    }
+
+    /**
+     * covers ::get
+     * covers ::set
+     */
+    public function testDefaultUser()
+    {
+        $setter = new Setter(__DIR__.'/emu/crontab.php');
+        $fn = __DIR__.'/emu/tmp/default.txt';
+        if (is_file($fn)) {
+            unlink($fn);
+        }
+        $setter->set('Crontab');
+        $this->assertFileExists($fn);
+        $this->assertSame('Crontab', $setter->get());
+        unlink($fn);
     }
 }

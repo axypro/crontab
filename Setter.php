@@ -23,13 +23,14 @@ class Setter
     }
 
     /**
-     * @param string $user
+     * @param string $user [optional]
      * @return string
      */
-    public function get($user)
+    public function get($user = null)
     {
         $result = [];
-        $cmd = $this->cmd.' -u'.$user.' -l';
+        $cUser = $user ? ' -u'.$user : '';
+        $cmd = $this->cmd.$cUser.' -l';
         $fp = popen($cmd, 'r');
         while (!feof($fp)) {
             $result[] = fread($fp, 512);
@@ -39,12 +40,13 @@ class Setter
     }
 
     /**
-     * @param string $user
      * @param string $content
+     * @param string $user [optional]
      */
-    public function set($user, $content)
+    public function set($content, $user = null)
     {
-        $cmd = $this->cmd.' -u'.$user.' -e';
+        $cUser = $user ? ' -u'.$user : '';
+        $cmd = $this->cmd.$cUser.' -e';
         $fp = popen($cmd, 'w');
         fwrite($fp, $content);
         fclose($fp);
