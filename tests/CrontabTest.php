@@ -63,4 +63,109 @@ class CrontabTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
         $this->assertSame('0 * * * * indexer --all --rotate', $crontab->getUser('root', false));
     }
+
+    /**
+     * covers ::save
+     */
+    public function testSave()
+    {
+        $fnGit = __DIR__.'/emu/tmp/git.txt';
+        $fnRoot = __DIR__.'/emu/tmp/root.txt';
+        copy(__DIR__.'/data/old-git.txt', $fnGit);
+        if (is_file($fnRoot)) {
+            unlink($fnRoot);
+        }
+        $config = [
+            'user' => 'git',
+            'cli' => './cli',
+            'dir' => '/var/www',
+            'name' => 'example.loc',
+            'jobs' => [
+                'task' => 'in 10:00',
+                'check' => [
+                    'user' => 'root',
+                    'full' => 'indexer --all --rotate',
+                    'time' => 'every 1h'
+                ],
+                'shutdown' => [
+                    'time' => 'every 5 min',
+                    'redirect' => null,
+                    'command' => 'shutdown -p now',
+                    'comment' => 'Shutdown it!',
+                ],
+            ],
+            '_cmd_crontab' => __DIR__.'/emu/crontab.php',
+        ];
+        $crontab = new Crontab($config);
+        $crontab->save();
+        $this->assertFileExists($fnGit);
+        $this->assertFileExists($fnRoot);
+        $this->assertFileEquals(__DIR__.'/data/new-git.txt', $fnGit);
+        $this->assertFileEquals(__DIR__.'/data/new-root.txt', $fnRoot);
+    }
+
+    public function testSaveNoRoot()
+    {
+        $fnGit = __DIR__.'/emu/tmp/default.txt';
+        $fnRoot = __DIR__.'/emu/tmp/root.txt';
+        copy(__DIR__.'/data/old-git.txt', $fnGit);
+        if (is_file($fnRoot)) {
+            unlink($fnRoot);
+        }
+        $config = [
+            'cli' => './cli',
+            'dir' => '/var/www',
+            'name' => 'example.loc',
+            'jobs' => [
+                'task' => 'in 10:00',
+                'check' => [
+                    'user' => 'root',
+                    'full' => 'indexer --all --rotate',
+                    'time' => 'every 1h'
+                ],
+                'shutdown' => [
+                    'time' => 'every 5 min',
+                    'redirect' => null,
+                    'command' => 'shutdown -p now',
+                    'comment' => 'Shutdown it!',
+                ],
+            ],
+            '_cmd_crontab' => __DIR__.'/emu/crontab.php',
+        ];
+        $crontab = new Crontab($config);
+        $crontab->save(false);
+        $this->assertFileExists($fnGit);
+        $this->assertFileNotExists($fnRoot);
+        $this->assertFileEquals(__DIR__.'/data/new-git.txt', $fnGit);
+    }
+
+    /**
+     * covers ::save
+     */
+    public function testSaveRootNoDefault()
+    {
+        $config = [
+            'cli' => './cli',
+            'dir' => '/var/www',
+            'name' => 'example.loc',
+            'jobs' => [
+                'task' => 'in 10:00',
+                'check' => [
+                    'user' => 'root',
+                    'full' => 'indexer --all --rotate',
+                    'time' => 'every 1h'
+                ],
+                'shutdown' => [
+                    'time' => 'every 5 min',
+                    'redirect' => null,
+                    'command' => 'shutdown -p now',
+                    'comment' => 'Shutdown it!',
+                ],
+            ],
+            '_cmd_crontab' => __DIR__.'/emu/crontab.php',
+        ];
+        $crontab = new Crontab($config);
+        $this->setExpectedException('axy\errors\InvalidConfig');
+        $crontab->save(true);
+    }
 }

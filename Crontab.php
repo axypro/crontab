@@ -6,6 +6,9 @@
 
 namespace axy\crontab;
 
+use axy\crontab\helpers\Insert;
+use axy\errors\InvalidConfig;
+
 /**
  * Crontab of some system
  */
@@ -20,6 +23,9 @@ class Crontab
     public function __construct(array $config)
     {
         $this->config = new Config($config);
+        $cmd = isset($config['_cmd_crontab']) ? $config['_cmd_crontab'] : null;
+        $err = isset($config['_cmd_error']) ? $config['_cmd_error'] : null;
+        $this->setter = new Setter($cmd, $err);
     }
 
     /**
@@ -57,7 +63,37 @@ class Crontab
     }
 
     /**
+     * Saves crontab
+     *
+     * @param bool $asRoot [optional]
+     *        the process is run as root
+     * @throws \axy\errors\InvalidConfig
+     */
+    public function save($asRoot = true)
+    {
+        if ($asRoot) {
+            $users = $this->getAllUsers(false);
+            if (isset($users[null])) {
+                throw new InvalidConfig('Crontab', 'required default "user" for run as root');
+            }
+        } else {
+            $user = $this->config->user;
+            $users = [$user => $this->getUser($user, false)];
+        }
+        foreach ($users as $user => $crontab) {
+            $content = $this->setter->get($user);
+            $content = Insert::insertContent($content, $crontab, $this->config->name);
+            $this->setter->set($content, $user);
+        }
+    }
+
+    /**
      * @var \axy\crontab\Config
      */
     private $config;
+
+    /**
+     * @var \axy\crontab\Setter
+     */
+    private $setter;
 }

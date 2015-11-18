@@ -1,0 +1,4 @@
+
+# begin example.loc
+0 * * * * indexer --all --rotate
+# end example.loc

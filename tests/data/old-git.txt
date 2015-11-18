@@ -1,0 +1,12 @@
+# This is comment
+
+* * * * * command
+
+# begin example.loc
+
+* * * * * old1
+* * * * * old2
+
+# end example.loc
+
+1 2 3 4 5 end

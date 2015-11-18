@@ -4,47 +4,54 @@
  * Crontab emulator
  */
 
-$format = 'Format: crontab.php [-u{user}] -(l|e) [filename]'.PHP_EOL;
+$format = 'Format: crontab.php [-u{user}] [-l]'.PHP_EOL;
 
 $args = $_SERVER['argv'];
 $count = count($args);
 
-if (($count < 2) || ($count > 3)) {
-    fwrite(STDERR, $format);
-    exit();
-}
+$user = 'default';
+array_shift($args); // crontab.php
 
-if (substr($args[1], 0, 2) === '-u') {
-    $user = substr($args[1], 2);
+if ((!empty($args)) && (substr($args[0], 0, 2) === '-u')) {
+    $user = substr(array_shift($args), 2);
     if (!preg_match('~^[a-z]{1,20}$~i', $user)) {
         fwrite(STDERR, $format);
         exit();
     }
-    $ind = 2;
+}
+
+if (empty($args)) {
+    $action = 'edit';
 } else {
-    $user = 'default';
-    $ind = 1;
-}
-
-if (!isset($args[$ind])) {
-    fwrite(STDERR, $format);
-    exit();
-}
-$opt = $args[$ind];
-
-$fn = __DIR__.'/tmp/'.$user.'.txt';
-if ($opt === '-l') {
-    if (is_file($fn)) {
-        fwrite(STDOUT, file_get_contents($fn));
-        exit();
+    $opt = array_shift($args);
+    if ($opt === '-') {
+        $action = 'edit';
+    } elseif ($opt === '-l') {
+        $action = 'list';
     } else {
-        fwrite(STDERR, 'no crontab for '.$user.PHP_EOL);
+        fwrite(STDERR, $format);
         exit();
     }
-} elseif ($opt === '-e') {
-    $content = fread(STDIN, 1024000);
-    file_put_contents($fn, $content);
-} else {
-    fwrite(STDERR, $format);
-    exit();
+    if (!empty($args)) {
+        fwrite(STDERR, $format);
+        exit();
+    }
+}
+
+$fn = __DIR__.'/tmp/'.$user.'.txt';
+
+switch ($action) {
+    case 'edit':
+        $content = stream_get_contents(STDIN);
+        file_put_contents($fn, $content);
+        break;
+    case 'list':
+        if (is_file($fn)) {
+            fwrite(STDOUT, file_get_contents($fn));
+            exit();
+        } else {
+            fwrite(STDERR, 'no crontab for '.$user.PHP_EOL);
+            exit();
+        }
+        break;
 }

@@ -13,13 +13,17 @@ class Setter
 {
     /**
      * @param string $cmd [optional]
+     * @param string $err [optional]
      */
-    public function __construct($cmd = null)
+    public function __construct($cmd = null, $err = null)
     {
         if ($cmd === null) {
             $cmd = 'crontab';
         }
         $this->cmd = $cmd;
+        if ($err) {
+            $this->descriptors[2] = ['file', $err, 'w'];
+        }
     }
 
     /**
@@ -40,8 +44,8 @@ class Setter
      */
     public function set($content, $user = null)
     {
-        $cUser = $user ? ' -u'.$user : '';
-        $cmd = $this->cmd.$cUser.' -e';
+        $cUser = $user ? ' -u'.$user.' -' : '';
+        $cmd = $this->cmd.$cUser;
         return $this->saveToProcess($cmd, $content);
     }
 
