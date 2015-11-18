@@ -1,7 +1,7 @@
 {
     "name": "axy/crontab",
     "type": "library",
-    "description": "Creating Jobs for CRON",
+    "description": "Parsing and changing of crontab files.",
     "keywords": [
         "cron",
         "crontab"

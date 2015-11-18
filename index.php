@@ -1,6 +1,6 @@
 <?php
 /**
- * Creating Jobs for CRON
+ * Parsing and changing of crontab files
  *
  * @package axy\crontab
  * @author Oleg Grigoriev <go.vasac@gmail.com>
