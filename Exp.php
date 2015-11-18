@@ -131,7 +131,7 @@ class Exp
      */
     private static function loadTime(array &$exp)
     {
-        if (!preg_match('~^([0-9]+)([^0-9].*?)?~s', $exp[0], $matches)) {
+        if (!preg_match('~^([0-9]+)([^0-9].*?)?$~s', $exp[0], $matches)) {
             return null;
         }
         array_shift($exp);
@@ -144,7 +144,7 @@ class Exp
         } else {
             $period = $matches[2];
         }
-        if (in_array($period, ['m', 'minute', 'minutes'])) {
+        if (in_array($period, ['m', 'min', 'minute', 'minutes'])) {
             $period = 'm';
             if ($value > 59) {
                 return null;

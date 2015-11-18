@@ -117,4 +117,42 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             ],
         ];
     }
+
+    /**
+     * covers ::getLists
+     */
+    public function testGetLists()
+    {
+        $params = [
+            'user' => 'git',
+            'cli' => './cli',
+            'dir' => '/var/www',
+            'jobs' => [
+                'task' => 'in 10:00',
+                'check' => [
+                    'user' => 'root',
+                    'full' => 'indexer --all --rotate',
+                    'time' => 'every 1h'
+                ],
+                'shutdown' => [
+                    'time' => 'every 5 min',
+                    'redirect' => null,
+                    'command' => 'shutdown -p now',
+                    'comment' => 'Shutdown it!',
+                ],
+            ],
+        ];
+        $config = new Config($params);
+        $this->assertEmpty($config->getCrontabForUser('none'));
+        $this->assertEmpty($config->getCrontabForUser(null));
+        $this->assertSame('0 * * * * indexer --all --rotate', $config->getCrontabForUser('root'));
+        $expected = [
+            '0 10 * * * cd /var/www && ./cli task > /dev/null 2>&1',
+            '# Shutdown it!',
+            '*/5 * * * * cd /var/www && ./cli shutdown -p now',
+        ];
+        $expected = implode("\n", $expected);
+        $this->assertSame($expected, $config->getCrontabForUser('git'));
+        $this->assertSame($expected, $config->getCrontabForUser());
+    }
 }

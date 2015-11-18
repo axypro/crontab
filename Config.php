@@ -86,6 +86,43 @@ class Config
     }
 
     /**
+     * Returns job lists for each user
+     *
+     * @param string|bool $user [optional]
+     *        user name or TRUE for default user
+     * @return string
+     */
+    public function getCrontabForUser($user = true)
+    {
+        if ($user === true) {
+            $user = $this->user;
+        }
+        $result = [];
+        foreach ($this->jobs as $params) {
+            if ($params['user'] === $user) {
+                if ($params['full']) {
+                    $command = $params['full'];
+                } else {
+                    $command = [];
+                    if ($this->dir !== null) {
+                        $command[] = 'cd '.$this->dir;
+                    }
+                    $command[] = $this->cli.' '.$params['command'];
+                    $command = implode(' && ', $command);
+                    if ($params['redirect'] !== null) {
+                        $command .= ' > '.$params['redirect'];
+                    }
+                }
+                if ($params['comment'] !== null) {
+                    $result[] = '# '.$params['comment'];
+                }
+                $result[] = $params['time'].' '.$command;
+            }
+        }
+        return implode("\n", $result);
+    }
+
+    /**
      * @param array $jobs
      * @throws \axy\errors\InvalidConfig
      */

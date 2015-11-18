@@ -44,6 +44,8 @@ class ExpTest extends \PHPUnit_Framework_TestCase
             'every' => '* * * * *',
             'every 1m' => '* * * * *',
             'every 5m' => '*/5 * * * *',
+            'every 5min' => '*/5 * * * *',
+            'every 5 min' => '*/5 * * * *',
             'every 5   minutes + 2' => '2/5 * * * *',
             'every 3h' => '0 */3 * * *',
             'every 3 hour offset 2' => '0 2/3 * * *',
