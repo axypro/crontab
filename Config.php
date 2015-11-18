@@ -86,7 +86,7 @@ class Config
     }
 
     /**
-     * Returns job lists for each user
+     * Returns job list for user
      *
      * @param string|bool $user [optional]
      *        user name or TRUE for default user
@@ -120,6 +120,20 @@ class Config
             }
         }
         return implode("\n", $result);
+    }
+
+    /**
+     * Returns a list of user names
+     *
+     * @return string[]
+     */
+    public function getListOfUsers()
+    {
+        $users = [];
+        foreach ($this->jobs as $job) {
+            $users[$job['user']] = true;
+        }
+        return array_keys($users);
     }
 
     /**

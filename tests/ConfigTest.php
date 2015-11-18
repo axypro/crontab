@@ -119,9 +119,10 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * covers ::getLists
+     * covers ::getCrontabForUser
+     * covers ::getListUsers
      */
-    public function testGetLists()
+    public function testGetCrontabForUser()
     {
         $params = [
             'user' => 'git',
@@ -154,5 +155,6 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $expected = implode("\n", $expected);
         $this->assertSame($expected, $config->getCrontabForUser('git'));
         $this->assertSame($expected, $config->getCrontabForUser());
+        $this->assertSame(['git', 'root'], $config->getListOfUsers());
     }
 }
