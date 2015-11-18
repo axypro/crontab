@@ -57,6 +57,8 @@ class JobListTest extends \PHPUnit_Framework_TestCase
         $list2->append('7 8 9 0 1 three');
         $expected = "1 2 3 4 5 one\n2 3 4 5 6 two\n7 8 9 0 1 three\n";
         $this->assertSame($expected, $list2->getContent());
+        $this->setExpectedException('InvalidArgumentException');
+        return new JobList(3);
     }
 
     /**
@@ -82,6 +84,16 @@ class JobListTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([$job2], $list->check(strtotime('2015-03-17 00:04:00')));
         $this->assertEquals([$job1, $job2], $list->check(strtotime('2015-03-17 02:04:00')));
         $this->assertEquals([$job1], $list->check(strtotime('2015-03-17 02:06:00')));
+    }
+
+    /**
+     * covers ::check
+     */
+    public function testCheckEvery()
+    {
+        $job1 = Job::createFromString('* * * * * command');
+        $list = new JobList([$job1]);
+        $this->assertEquals([$job1], $list->check());
     }
 
     /**
