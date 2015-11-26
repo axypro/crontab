@@ -81,9 +81,11 @@ class Crontab
             $users = [$user => $this->getUser($user, false)];
         }
         foreach ($users as $user => $crontab) {
-            $content = $this->setter->get($user);
-            $content = Insert::insertContent($content, $crontab, $this->config->name);
-            $this->setter->set($content, $user);
+            $origin = $this->setter->get($user);
+            $content = Insert::insertContent($origin, $crontab, $this->config->name);
+            if ($origin !== $content) {
+                $this->setter->set($content, $user);
+            }
         }
     }
 

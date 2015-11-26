@@ -44,6 +44,7 @@ switch ($action) {
     case 'edit':
         $content = stream_get_contents(STDIN);
         file_put_contents($fn, $content);
+        file_put_contents(__DIR__.'/tmp/change', date('d.m.Y H:i:s').PHP_EOL);
         break;
     case 'list':
         if (is_file($fn)) {

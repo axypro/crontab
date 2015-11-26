@@ -168,4 +168,42 @@ class CrontabTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('axy\errors\InvalidConfig');
         $crontab->save(true);
     }
+
+    /**
+     * covers ::save
+     */
+    public function testSaveNotModified()
+    {
+        $fnGit = __DIR__.'/emu/tmp/git.txt';
+        if (is_file($fnGit)) {
+            unlink($fnGit);
+        }
+        $fnChange = __DIR__.'/emu/tmp/change';
+        $config = [
+            'user' => 'git',
+            'cli' => './cli',
+            'dir' => '/var/www',
+            'name' => 'example.loc',
+            'jobs' => [
+                'task' => 'in 10:00',
+                'shutdown' => [
+                    'time' => 'every 5 min',
+                    'redirect' => null,
+                    'command' => 'shutdown -p now',
+                    'comment' => 'Shutdown it!',
+                ],
+            ],
+            '_cmd_crontab' => __DIR__.'/emu/crontab.php',
+        ];
+        $crontab = new Crontab($config);
+        if (is_file($fnChange)) {
+            unlink($fnChange);
+        }
+        $crontab->save();
+        $this->assertFileExists($fnChange);
+        $crontab2 = new Crontab($config);
+        unlink($fnChange);
+        $crontab2->save();
+        $this->assertFileNotExists($fnChange);
+    }
 }
