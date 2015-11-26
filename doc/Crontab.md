@@ -70,6 +70,8 @@ To write crontab files of all users need to run the script as root.
 
 Or `$crontab->save(false)` write to crontab only default user (`git` in the example).
 
+The method returns TRUE if the crontab has been modified.
+
 ## List
 
 Or, you can simply print all the tasks to the console.

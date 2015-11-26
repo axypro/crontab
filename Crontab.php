@@ -67,6 +67,8 @@ class Crontab
      *
      * @param bool $asRoot [optional]
      *        the process is run as root
+     * @return bool
+     *         TRUE if the crontab has been modified
      * @throws \axy\errors\InvalidConfig
      */
     public function save($asRoot = true)
@@ -80,13 +82,16 @@ class Crontab
             $user = $this->config->user;
             $users = [$user => $this->getUser($user, false)];
         }
+        $modified = false;
         foreach ($users as $user => $crontab) {
             $origin = $this->setter->get($user);
             $content = Insert::insertContent($origin, $crontab, $this->config->name);
             if ($origin !== $content) {
                 $this->setter->set($content, $user);
+                $modified = true;
             }
         }
+        return $modified;
     }
 
     /**

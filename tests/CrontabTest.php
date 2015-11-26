@@ -199,11 +199,11 @@ class CrontabTest extends \PHPUnit_Framework_TestCase
         if (is_file($fnChange)) {
             unlink($fnChange);
         }
-        $crontab->save();
+        $this->assertTrue($crontab->save());
         $this->assertFileExists($fnChange);
         $crontab2 = new Crontab($config);
         unlink($fnChange);
-        $crontab2->save();
+        $this->assertFalse($crontab2->save());
         $this->assertFileNotExists($fnChange);
     }
 }
