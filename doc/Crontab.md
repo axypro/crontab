@@ -200,5 +200,6 @@ All expressions are case insensitive.
 * `every 2h` - (`0 */2 * * *`). Can be user `h`, `hour` or `hours`.
 * `every 2 hours in 10 min` - (`10 */2 * * *`).
 * `every 5h offset 2 in 10m` - (`10 2/5 * * *`).
-* `every 1h` - every hour (`0 * * * *`).
+* `every hour` - every hour (`0 * * * *`).
+* `every hour in 10m` - every hour (`10 * * * *`).
 * empty string is `every`

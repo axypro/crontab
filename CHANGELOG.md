@@ -1,7 +1,11 @@
+### 0.1.2 (26.11.2015)
+
+* #4: Crontab::save() returns TRUE if the crontab has been modified
+* #3: Every hour (without number)
+
 ### 0.1.1 (26.11.2015)
 
 * #2: Do not exec the crontab, if the content has not changed
-* #4: Crontab::save() returns TRUE if the crontab has been modified
 
 ### 0.1.0 (18.11.2015)
 

@@ -132,6 +132,10 @@ class Exp
     private static function loadTime(array &$exp)
     {
         if (!preg_match('~^([0-9]+)([^0-9].*?)?$~s', $exp[0], $matches)) {
+            if (in_array($exp[0], ['h', 'hour', 'hours'])) {
+                array_shift($exp);
+                return ['h', 1];
+            }
             return null;
         }
         array_shift($exp);
