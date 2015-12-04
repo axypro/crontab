@@ -1,3 +1,7 @@
+### dev-master
+
+* Travis
+
 ### 0.1.2 (26.11.2015)
 
 * #4: Crontab::save() returns TRUE if the crontab has been modified

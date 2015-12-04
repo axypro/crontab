@@ -1,5 +1,10 @@
 # axy\crontab
 
+[![Latest Stable Version](https://img.shields.io/packagist/v/axy/crontab.svg?style=flat-square)](https://packagist.org/packages/axy/crontab)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.4-8892BF.svg?style=flat-square)](https://php.net/)
+[![Build Status](https://img.shields.io/travis/axypro/crontab/master.svg?style=flat-square)](https://travis-ci.org/axypro/crontab)
+
+
 Parsing and changing of crontab files on PHP.
 
 First of all, designed to automatically install jobs of some system.
