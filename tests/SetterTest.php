@@ -15,11 +15,11 @@ class SetterTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        if (strtolower(substr(PHP_OS) === 'win')) {
+        if (strtolower(substr(PHP_OS, 0, 3) === 'win')) {
             $this->markTestSkipped('Windows');
         }
     }
-    
+
     /**
      * covers ::get
      */
