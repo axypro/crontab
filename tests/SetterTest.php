@@ -13,6 +13,13 @@ use axy\crontab\Setter;
  */
 class SetterTest extends \PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        if (strtolower(substr(PHP_OS) === 'win')) {
+            $this->markTestSkipped('Windows');
+        }
+    }
+    
     /**
      * covers ::get
      */
