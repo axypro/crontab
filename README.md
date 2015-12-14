@@ -9,7 +9,7 @@ Parsing and changing of crontab files on PHP.
 [![License](https://poser.pugx.org/axy/crontab/license)](LICENSE)
 
 * The library does not require any dependencies (except composer packages).
-* Tested on PHP 5.4+, PHP 7, HHVM (on Linux).
+* Tested on PHP 5.4+, PHP 7, HHVM (on Linux), PHP 5.5 (on Windows).
 * Install: `composer require axy/crontab`.
 * License: [MIT](LICENSE).
 
