@@ -15,6 +15,8 @@ Parsing and changing of crontab files on PHP.
 
 ### Documentation
 
+[Documentation in Russian](https://github.com/axypro/crontab/wiki).
+
 First of all, designed to automatically install jobs of some system.
 
 * [Job](doc/Job.md) - a single job
